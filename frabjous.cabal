@@ -19,14 +19,14 @@ executable frabjousc
                        Frabjous.Compiler.Parser, 
                        Frabjous.Compiler.CodeGen
   other-extensions:    NamedFieldPuns, RecordWildCards, OverloadedStrings, TemplateHaskell, TypeOperators, DeriveDataTypeable, ScopedTypeVariables, NoMonomorphismRestriction, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses
-  build-depends:       base >=4.7 && <4.8, containers >=0.5 && <0.6, MonadRandom >=0.1 && <0.2, mtl >=2.0 && <2.3, netwire >=4.0 && <4.1, fclabels >=2.0 && <3, parsec >=3.0 && <4, haskell-src-exts >=1.15 && <1.16, syb >=0.4 && <0.5
+  build-depends:       base >=4.6 && <4.8, containers >=0.5 && <0.6, MonadRandom >=0.1 && <0.2, mtl >=2.0 && <2.3, netwire >=4.0 && <4.1, fclabels >=2.0 && <3, parsec >=3.0 && <4, haskell-src-exts >=1.15 && <1.16, syb >=0.4 && <0.5
   hs-source-dirs:      src    
   default-language:    Haskell2010
-  ghc-options:        -W
+  ghc-options:        -W -main-is Frabjous.Compiler.Main.main
 
 library 
   Build-Depends:      
-                      base >=4.7 && <4.8,
+                      base >=4.6 && <4.8,
                       containers >=0.5 && <0.6,
                       MonadRandom >=0.1 && <0.2,
                       mtl >=2.0 && <2.3,
@@ -42,8 +42,7 @@ library
   hs-source-dirs:     src
   default-language:    Haskell2010
   ghc-options:        
-                      Frabjous.Compiler.Main,
-                      Frabjous.Compiler.Parser
+                      -W -main-is Frabjous.Compiler.Main.main
   other-modules:      
                       Frabjous.Compiler.CodeGen,
                       Frabjous.Compiler.Main,
