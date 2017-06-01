@@ -1,0 +1,65 @@
+-- OUTPUT
+model = createModel modelStructure initialState (mkStdGen 3)
+
+observers = [(processStatistics statistics, stderr), (toGUI, stdout)]
+
+main = do 
+  args <- getArgs
+  if length args /= 2 
+  then putStrLn "Call with two arguments, duration and timestep"
+  else do
+      let [t, step] = map read args
+      runModelIO (for t . model) observers step
+
+
+
+toGUI :: WireP (ModelOutput Agent ()) String
+toGUI = delay (toString initialJSON) . function (toString . toJSON)
+
+
+toString j = (map (toEnum . fromEnum) . ByteString.unpack . encode $ j) ++ "\n"
+
+initialJSON = object [ "height" .= height,
+	      	       "width" .= width ]
+
+
+
+radius :: Int
+radius = cellSize `div` 3
+circle, line :: Text
+circle = "circle"
+line = "line"
+stateToColor :: Bool -> Text
+currentTime :: Double
+currentTime = 0.0
+black :: Text
+black = "black"
+stateToColor state = case state of 
+			True -> "red"
+			False -> "black"
+
+
+instance ToJSON Agent where
+	 toJSON (Cell {x, y, alive}) = 
+	 	object [ "shape" .= circle
+		       , "x" .= x
+		       , "y" .= y
+		       , "r" .= radius
+		       , "color" .= stateToColor alive ]
+
+toLine :: (Agent, Agent) -> Value
+toLine (Cell {x = x1, y = y1, alive = alive1}, Cell {x = x2, y = y2, alive = alive2}) = 
+       object [ "shape" .= line
+              , "x1" .= x1
+	      , "x2" .= x2
+	      , "y1" .= y1
+	      , "y2" .= y2 
+	      , "color" .= black]
+
+instance ToJSON (ModelOutput Agent ()) where
+	 toJSON m = 
+	 	let agents = IntMap.elems . collection . cells $ m
+		    pairs = agentPairs (nbhdNetwork m) (cells m) (cells m)
+		    lines = map toLine pairs
+		    array = Array (Vector.fromList ( lines ++ map toJSON agents))
+		in object [ "objects" .= array]

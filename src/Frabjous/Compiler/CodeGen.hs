@@ -223,7 +223,7 @@ imports = unlines
         
         "import Control.Wire (mkGen, (.), stepWireP, WireP)",
         "import Control.Monad hiding (when, mapM, sequence)",
-        "import Control.Monad.Random hiding (fromList)",
+        "import Control.Monad.Random hiding (fromList, uniform)",
         "import Control.Monad.Identity (Identity)",
         "import Prelude hiding ((.), id, mapM, sequence, length, until, Real)",
         "import Control.Arrow",
